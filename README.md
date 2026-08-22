@@ -57,9 +57,14 @@ per-video (`hall`, `search`, `feed`, `analysis`, `risk`):
 
 ## Deploy (ebs home server · Next standalone)
 
-Live: **https://kiki.unflix.tv** — a cloudflared tunnel fronts
+Live: **https://kiki.unflix.tv** — the `kiki` cloudflared tunnel
+(`cloudflared-kiki.service`, config `~/.cloudflared/kiki.yml`) fronts
 `ebs:127.0.0.1:8492`, where systemd's `app-kiki.service` runs
 `/home/ubuntu/apps/kiki/server.js` (`output: "standalone"`).
+
+Port 8492 is deliberate: 8490/8491 are taken by the sibling apps on the same
+host. The DNS side is one CNAME to the tunnel — `cloudflared tunnel route dns
+kiki kiki.unflix.tv` — nothing else points at this hostname.
 
 Nothing in `src/` knows it left Workers: `src/instrumentation.ts` injects a
 file-backed KV, a `node:sqlite` D1, and a fire-and-forget `waitUntil` into the
@@ -83,18 +88,34 @@ Rollback = untar the backup over `~/apps/kiki` and restart.
 
 The risk collector runs on the same host: `worker-host.mjs` drives
 `workers/cron`'s worker from crontab (collect every 2h, discover 2×/day) against
-`APP_BASE=http://127.0.0.1:8492`, bypassing the tunnel.
+`APP_BASE=http://127.0.0.1:8492`, bypassing the tunnel. It lives in
+`~/cfbots/kiki-risk-cron/` (`worker.js` = a type-stripped copy of
+`workers/cron/index.ts`, plus `host.json` and an `.env` holding `APP_BASE` /
+`OPS_KEY`). Crontab minutes are offset from the sibling app's so the two never
+hit the YouTube quota in the same minute.
+
+The D1 shim is a plain SQLite file, so the schema is applied by hand once:
+
+```bash
+scp migrations/0001_risk.sql ebs:/tmp/
+ssh ebs 'sqlite3 ~/cfbots/_data/kiki-risk.sqlite < /tmp/0001_risk.sql'
+```
+
+Without it every `/api/risk/*` call fails and the 리스크 tab shows
+"리스크 데이터를 불러오지 못했어요".
 
 ### Cloudflare Workers (legacy path)
 
 The [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) setup
-(`open-next.config.ts`, `wrangler.jsonc`) is still in the repo, but the
-`workers.dev` deployment is currently down (404). To bring it back:
+(`open-next.config.ts`, `wrangler.jsonc`) is still in the repo and its
+bindings now point at real kiki-owned resources (`kiki-risk`,
+`kiki-SHORTS_CACHE`, `kiki-NEXT_INC_CACHE_KV`), but nothing is deployed there —
+the custom domain is served by the tunnel above. To bring the Workers path back:
 
 ```bash
-# one-time: create the KV namespaces and paste ids into wrangler.jsonc
-pnpm exec wrangler kv namespace create SHORTS_CACHE
-pnpm exec wrangler kv namespace create NEXT_INC_CACHE_KV
+# the namespaces already exist; recreate only if you start from scratch
+#   pnpm exec wrangler kv namespace create kiki-SHORTS_CACHE
+#   pnpm exec wrangler kv namespace create kiki-NEXT_INC_CACHE_KV
 
 # set the API key as a Worker secret (not committed)
 printf 'YOUR_KEY' | pnpm exec wrangler secret put YOUTUBE_API_KEY

@@ -9,7 +9,7 @@ import {
 import { evaluateAlerts, type RiskAlert } from "@/lib/risk/rules";
 import { insertAlerts, insertSnapshots, loadBaselines, riskDb } from "@/lib/risk/db";
 
-const DEFAULT_CHANNEL = "UC-Fnix71vRP64WXeo0ikd0Q";
+const DEFAULT_CHANNEL = "UCaHwGJXFb28TekZMf7iFg5Q";
 // Videos per call — each costs ~2-3 subrequests (KV read / YT fetch / KV write).
 const BATCH = 10;
 const AGG_TTL_SECONDS = 60 * 60; // an abandoned run's partial state self-cleans

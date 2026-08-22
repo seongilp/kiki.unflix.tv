@@ -27,7 +27,7 @@ async function run(cron: string, env: Env): Promise<void> {
 
   if (cron === COLLECT_CRON) {
     // Seed the channel/video cache, then drive collect batches to completion.
-    await fetch(`${base}/api/channel?handle=UC-Fnix71vRP64WXeo0ikd0Q`).catch(() => {});
+    await fetch(`${base}/api/channel?handle=UCaHwGJXFb28TekZMf7iFg5Q`).catch(() => {});
     const run = String(Date.now());
     let start = 0;
     for (let i = 0; i < 40; i++) {
