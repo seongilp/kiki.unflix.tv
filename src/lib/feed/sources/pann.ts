@@ -1,7 +1,7 @@
 import { parse } from "node-html-parser";
 import type { FeedItem } from "../types";
 import { stripHtml, truncate } from "../html";
-import { KEYWORDS, PANN_PER_KEYWORD } from "../config";
+import { KEYWORDS, PANN_PER_KEYWORD, RELEVANCE_TOKENS } from "../config";
 
 const ORIGIN = "https://pann.nate.com";
 
@@ -40,6 +40,17 @@ export function normalizePann(html: string): FeedItem[] {
   return items;
 }
 
+// 네이트판 검색은 "키키"를 웃음소리로도 잡아 전혀 무관한 글을 섞어 준다
+// (실측 47건 중 10건). 제목/본문 미리보기에 그룹·멤버 이름이 하나도 없으면
+// 키키 얘기가 아니라고 본다.
+//
+// 한계: "키키 웃었다" 처럼 의성어가 제목에 박힌 글은 통과한다. 그런 글은
+// 애초에 검색에도 걸린 것이라, 정밀도를 더 올리려면 본문까지 받아야 한다.
+export function isRelevant(item: FeedItem): boolean {
+  const hay = `${item.title} ${item.snippet}`.toLowerCase();
+  return RELEVANCE_TOKENS.some((t) => hay.includes(t));
+}
+
 // Searches Nate Pann per keyword, comment-sorted (sort=CD) so the most-
 // discussed posts surface first — the useful signal for risk. Best-effort:
 // returns [] on any block/error, never aborting the rest of the feed.
@@ -63,7 +74,10 @@ export async function fetchItems(keywords: string[] = KEYWORDS): Promise<FeedIte
         },
       });
       if (!res.ok) continue;
-      for (const it of normalizePann(await res.text()).slice(0, PANN_PER_KEYWORD)) {
+      const rows = normalizePann(await res.text())
+        .filter(isRelevant)
+        .slice(0, PANN_PER_KEYWORD);
+      for (const it of rows) {
         if (!byId.has(it.id)) byId.set(it.id, it);
       }
     } catch {

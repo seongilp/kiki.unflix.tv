@@ -13,6 +13,20 @@ export const KEYWORDS = [
   "키키 키야",
 ];
 
+// 키워드 검색 소스(네이트판)가 물어오는 글이 실제로 키키 얘기인지 판별하는
+// 토큰. "키키"는 의성어(웃음소리)라 검색 엔진이 무관한 글을 끌고 오는데,
+// 제목/미리보기에 아래 중 하나도 없으면 그 글이다.
+// DC 는 키키 전용 갤러리라 이름이 안 나와도 전부 키키 얘기이므로 적용하지 않는다.
+export const RELEVANCE_TOKENS = [
+  "키키",
+  "kiiikiii",
+  "지유",
+  "이솔",
+  "수이",
+  "하음",
+  "키야",
+];
+
 // Sources wired AND enabled. 스레드/더쿠/인스티즈 are deferred.
 export const ENABLED_SOURCES: FeedSource[] = ["naver", "daum", "dc", "instagram", "pann"];
 

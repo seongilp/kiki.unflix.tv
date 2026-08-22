@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizePann } from "./pann";
+import { normalizePann, isRelevant } from "./pann";
 
 const html = `
 <ul class="s_list">
@@ -47,5 +47,31 @@ describe("normalizePann", () => {
 
   it("returns [] on empty markup", () => {
     expect(normalizePann("<html></html>")).toEqual([]);
+  });
+});
+
+// 네이트판 검색은 "키키"를 의성어(웃음소리)로도 잡아 전혀 무관한 글을
+// 끌고 온다 — 실측 47건 중 10건. 제목/본문미리보기에 그룹·멤버 이름이
+// 없으면 버린다.
+describe("isRelevant", () => {
+  const row = (title: string, preview: string) => ({
+    id: "pann:1",
+    source: "pann" as const,
+    author: "엔터톡",
+    title,
+    snippet: preview,
+    url: "https://pann.nate.com/talk/1",
+    publishedAt: 0,
+  });
+
+  it("keeps posts naming the group or a member", () => {
+    expect(isRelevant(row("키키 신곡 대박", ""))).toBe(true);
+    expect(isRelevant(row("무대 미쳤다", "이솔 파트 좋더라"))).toBe(true);
+    expect(isRelevant(row("KIIIKIII 컴백", ""))).toBe(true);
+  });
+
+  it("drops the onomatopoeia noise", () => {
+    expect(isRelevant(row("[모두드루와] 심심해서 쓰는 동방신기 일화", ""))).toBe(false);
+    expect(isRelevant(row("엘프의 만행을 다시금 알립니다", "ㅋㅋ 웃겨"))).toBe(false);
   });
 });
