@@ -52,9 +52,9 @@ const KR_NAMES: Record<string, string> = {
 // Static avatars self-hosted under /members (IG's signed CDN urls expire).
 // 확보한 멤버 사진만 표시하고, 나머지는 이니셜 배지로 폴백한다.
 // public/members/<key>.jpg 를 추가한 뒤 아래 HAS_PHOTO 에 키를 넣으면 사진이 뜬다.
-// (사진 출처: 멤버 개인 인스타그램 프로필 이미지 — IG 프로필 API 가
-//  레이트리밋을 걸면 수집이 실패하니 시간을 두고 다시 받으면 된다.)
-const HAS_PHOTO = new Set<string>(["leesol"]);
+// 지금은 비어 있다 — 멤버 개인 인스타가 없어(팬페이지뿐) 출처가 분명한
+// 사진을 아직 확보하지 못했다. 그룹 사진(all.jpg)만 공식 계정 것을 쓴다.
+const HAS_PHOTO = new Set<string>([]);
 const AVATARS: Record<string, string | null> = {
   all: "/members/all.jpg",
   ...Object.fromEntries(

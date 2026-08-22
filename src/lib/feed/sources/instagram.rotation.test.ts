@@ -1,5 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { IG_USERNAMES, IG_STATE_KV_KEY } from "../config";
+import { IG_STATE_KV_KEY } from "../config";
+
+// 로테이션은 "계정이 여러 개일 때" 의 동작이 핵심이라, 실제 운영 계정 수와
+// 분리해 고정된 3개짜리 목록으로 검증한다. (키키는 현재 공식 계정 하나뿐이라
+// 프로덕션 상수를 그대로 쓰면 로테이션 자체를 테스트할 수 없다.)
+const IG_USERNAMES = ["acct.one", "acct.two", "acct.three"];
+
+vi.mock("../config", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../config")>()),
+  IG_USERNAMES: ["acct.one", "acct.two", "acct.three"],
+}));
 
 // Map-backed fake of the KV subset instagram.ts uses.
 function fakeKv(store: Map<string, string>) {

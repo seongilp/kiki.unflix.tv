@@ -7,10 +7,15 @@ import { MEMBERS } from "@/lib/analysis/members";
 
 type Filter = "all" | FeedSource;
 
-// Instagram sub-filter: 공식 + each member, keyed by account username.
+// Instagram sub-filter: 공식 + 개인 계정이 있는 멤버만. 키키는 현재 공식
+// 계정 하나뿐이라 멤버 칩은 하나도 그려지지 않는다 — 계정이 생겨
+// members.ts 의 igUsername 이 채워지면 자동으로 나타난다.
 const IG_ACCOUNTS: { username: string; label: string }[] = [
   { username: "kiiikiii.official", label: "공식" },
-  ...MEMBERS.map((m) => ({ username: m.igUsername, label: m.name })),
+  ...MEMBERS.filter((m) => m.igUsername).map((m) => ({
+    username: m.igUsername,
+    label: m.name,
+  })),
 ];
 
 function igLabel(author: string): string | undefined {

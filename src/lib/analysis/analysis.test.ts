@@ -123,9 +123,11 @@ describe("analyzeComments", () => {
   });
 
   it("maps IG usernames to member keys", () => {
-    expect(memberKeyForIgUsername("kiiikiii__jiyu")).toBe("jiyu");
-    expect(memberKeyForIgUsername("kiiikiii__haum")).toBe("haum");
+    // 키키는 멤버 개인 인스타가 없어 현재는 어떤 계정도 멤버로 귀속되지 않는다.
     expect(memberKeyForIgUsername("kiiikiii.official")).toBeUndefined();
+    expect(memberKeyForIgUsername("kiiikiii__jiyu")).toBeUndefined();
+    // 빈 문자열이 빈 igUsername 과 매칭되면 안 된다.
+    expect(memberKeyForIgUsername("")).toBeUndefined();
   });
 
   it("rolls up sentiment per origin", () => {

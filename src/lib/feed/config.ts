@@ -26,20 +26,15 @@ export const NAVER_PER_KEYWORD = 30;
 export const PANN_PER_KEYWORD = 15;
 // Daum web search (Kakao Search API) results per keyword.
 export const DAUM_PER_KEYWORD = 25;
-// Per-account cap — 6 accounts, so keep each slice small and polite.
+// Per-account cap — 계정이 하나뿐이라 넉넉히 두어도 부담이 없다.
 export const IG_MEDIA_LIMIT = 12;
-// KiiiKiii official + member accounts, read via the logged-out
-// web_profile_info API. Instagram rate-limits bursts, so each feed refresh
-// fetches ONE account (round-robin) and accumulates results in KV — see
-// sources/instagram.ts. 존재하지 않는 계정은 조용히 건너뛴다.
-export const IG_USERNAMES = [
-  "kiiikiii.official", // 공식
-  "kiiikiii__jiyu", // 지유
-  "kiiikiii__leesol", // 이솔
-  "kiiikiii__sui", // 수이
-  "kiiikiii__haum", // 하음
-  "kiiikiii__kya", // 키야
-];
+// 키키 공식 인스타 하나뿐이다. 멤버 개인 계정은 존재하지 않고,
+// kiiikiii__leesol / kiiikiii.jiyu06 같은 계정은 전부 팬페이지다
+// (og:title 에 FANPAGE / Updates 로 명시돼 있다).
+//
+// 주의: 인스타는 없는 계정 URL 에도 HTTP 200 을 돌려준다. 계정 실재 여부는
+// 상태코드가 아니라 og:description(팔로워/게시물 수)이 있는지로 판단할 것.
+export const IG_USERNAMES = ["kiiikiii.official"];
 // KV key prefix for the Instagram rotation state (reuses SHORTS_CACHE).
 // `<prefix>:cursor` + one `<prefix>:u:<username>` key per account — per-key
 // storage survives KV eventual consistency; a single blob does not.

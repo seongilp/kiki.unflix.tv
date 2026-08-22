@@ -28,6 +28,8 @@ per-video (`hall`, `search`, `feed`, `analysis`, `risk`):
   the player, or a plain list).
 - **전당 / 검색** — top comments across the channel, and full-text search.
 - **피드** — 유튜브·뉴스(네이버)·다음·DC·네이트판·인스타 items in one stream.
+  인스타는 공식 계정(`kiiikiii.official`) 하나뿐이다 — 키키는 멤버 개인
+  계정을 운영하지 않고, `kiiikiii__leesol` 류는 전부 팬페이지다.
 - **분석** — sentiment / keyword breakdown of the loaded comments.
 - **리스크** — OSINT-style threat monitor over the D1 snapshot series: per-member
   threat level, mention/negativity trends, the alert feed, a source matrix, and
@@ -85,6 +87,29 @@ curl -sI https://kiki.unflix.tv | head -1
 `--exclude .env.runtime` is load-bearing: that file (server-side only) holds
 `PORT`/`HOSTNAME`, the KV/D1 shim paths, and the API keys — see `.env.example`.
 Rollback = untar the backup over `~/apps/kiki` and restart.
+
+### 인스타 수집 (2026-08-22~ 우회 경로)
+
+인스타의 로그아웃 공개 API(`/api/v1/users/web_profile_info`)가 모든 IP·
+브라우저에 대해 400 `Asset asset://laser.provider/… has been deleted` 를
+돌려준다. 프로필 페이지 자체는 `/api/graphql` 로 정상 렌더되므로,
+`workers/ig-scrape/ig-scrape.mjs` 가 헤드리스 크롬으로 그리드를 열어
+permalink 만 얻고 캡션·날짜·썸네일은 게시물 URL 의 `og:` 메타에서 받는다.
+
+```bash
+ssh ebs 'node ~/cfbots/kiki-ig-scrape/ig-scrape.mjs'   # 3시간마다 crontab
+```
+
+두 가지가 함정이다:
+
+- 게시물 상세는 **크롤러 UA**(`facebookexternalhit/1.1`)로 받아야 한다.
+  일반 브라우저 UA 로는 `og:` 없는 JS 셸만 온다.
+- 인스타는 **없는 계정 URL 에도 200** 을 준다. 계정 실재 여부는 상태코드가
+  아니라 `og:description`(팔로워/게시물 수) 유무로 판단할 것.
+
+수집 결과는 앱이 이미 읽는 KV 키(`feed:ig:v2:u:<username>`)에 그대로 쓴다.
+앱 코드는 손대지 않았고, `fetchItems()` 가 수집 실패 시 기존 KV 를 보존하므로
+공개 API 가 살아나면 정규 경로가 자연히 이 키를 다시 덮어쓴다.
 
 The risk collector runs on the same host: `worker-host.mjs` drives
 `workers/cron`'s worker from crontab (collect every 2h, discover 2×/day) against

@@ -4,19 +4,24 @@ export interface Member {
   key: string;
   name: string; // display name (Korean)
   aliases: string[]; // lowercase; matched with boundary rules below
-  igUsername: string; // personal Instagram — posts attribute to the member
+  // 개인 인스타 계정. 키키는 2026-08 현재 공식 계정(kiiikiii.official) 하나만
+  // 운영하고 멤버 개인 계정은 없다(나무위키/공식 SNS 목록 확인). 계정이 생기면
+  // 여기에 채우면 인스타 글이 그 멤버에게 귀속된다. 빈 문자열 = 계정 없음.
+  igUsername: string;
 }
 
 export const MEMBERS: Member[] = [
-  { key: "jiyu", name: "지유", aliases: ["지유", "jiyu"], igUsername: "kiiikiii__jiyu" },
-  { key: "leesol", name: "이솔", aliases: ["이솔", "leesol", "isol"], igUsername: "kiiikiii__leesol" },
-  { key: "sui", name: "수이", aliases: ["수이", "sui"], igUsername: "kiiikiii__sui" },
-  { key: "haum", name: "하음", aliases: ["하음", "haum"], igUsername: "kiiikiii__haum" },
-  { key: "kya", name: "키야", aliases: ["키야", "kya"], igUsername: "kiiikiii__kya" },
+  { key: "jiyu", name: "지유", aliases: ["지유", "jiyu"], igUsername: "" },
+  { key: "leesol", name: "이솔", aliases: ["이솔", "leesol", "isol"], igUsername: "" },
+  { key: "sui", name: "수이", aliases: ["수이", "sui"], igUsername: "" },
+  { key: "haum", name: "하음", aliases: ["하음", "haum"], igUsername: "" },
+  { key: "kya", name: "키야", aliases: ["키야", "kya"], igUsername: "" },
 ];
 
 // Member key for a personal Instagram username (undefined for 공식/unknown).
 export function memberKeyForIgUsername(username: string): string | undefined {
+  // 빈 igUsername 끼리 매칭돼 아무 글이나 첫 멤버에게 붙는 사고를 막는다.
+  if (!username) return undefined;
   return MEMBERS.find((m) => m.igUsername === username)?.key;
 }
 
