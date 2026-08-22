@@ -100,6 +100,11 @@ permalink 만 얻고 캡션·날짜·썸네일은 게시물 URL 의 `og:` 메타
 ssh ebs 'node ~/cfbots/kiki-ig-scrape/ig-scrape.mjs'   # 3시간마다 crontab
 ```
 
+로그아웃 그리드는 **한 번에 12개까지만** 준다(스크롤해도 더 안 나오고 로그인
+벽이 뜬다). 그래서 실행마다 12개를 보고 이전 수집분과 합쳐 60개까지 누적한다.
+그리드에 섞여 오는 합작·태그 글(the_firsttake·applemusic·youtubekorea 등)도
+전부 실제 키키 콘텐츠라 버리지 않고, 작성자는 원 계정 그대로 표시한다.
+
 두 가지가 함정이다:
 
 - 게시물 상세는 **크롤러 UA**(`facebookexternalhit/1.1`)로 받아야 한다.

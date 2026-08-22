@@ -22,7 +22,11 @@ const PLAYWRIGHT = "/home/ubuntu/cgv/node_modules/playwright-core/index.js";
 const KV_DIR = process.env.KV_SHIM_DIR ?? "/home/ubuntu/cfbots/_kv/KIKI_SHORTS_CACHE";
 const KV_PREFIX = "feed:ig:v2";
 const TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const PER_ACCOUNT = 12;
+// 로그아웃 프로필 그리드는 한 번에 12개까지만 주고 그 뒤는 로그인 벽이다
+// (스크롤해도 더 안 나온다). 그래서 실행마다 최대 12개를 보고, 이전 수집분과
+// 합쳐 STORE_CAP 까지 누적한다 — 시간이 지날수록 피드가 두꺼워진다.
+const GRID_MAX = 12;
+const STORE_CAP = 60;
 
 // 키키는 공식 계정 하나뿐이다. 멤버 개인 인스타는 존재하지 않고
 // kiiikiii__leesol 같은 건 팬페이지(og:title 에 FANPAGE 명시)라 넣지 않는다.
@@ -126,11 +130,18 @@ async function gridLinks(page, username) {
     const seen = new Set();
     const out = [];
     for (const a of document.querySelectorAll('a[href*="/p/"], a[href*="/reel/"]')) {
-      const m = a.getAttribute("href")?.match(/^\/([^/]+)\/(p|reel)\/([^/]+)\//);
-      // 그리드에는 추천/태그된 남의 계정 글도 섞여 들어온다 — 본인 것만 남긴다.
-      if (!m || m[1] !== user || seen.has(m[3])) continue;
+      const href = a.getAttribute("href") ?? "";
+      const m = href.match(/^\/([^/]+)\/(p|reel)\/([^/]+)\//);
+      if (!m || seen.has(m[3])) continue;
       seen.add(m[3]);
-      out.push({ shortcode: m[3], url: `https://www.instagram.com${a.getAttribute("href")}` });
+      // 그리드에는 합작·태그 글이 섞인다(the_firsttake, applemusic,
+      // youtubekorea …). 전부 실제 키키 콘텐츠라 버리지 않고, 작성자는
+      // 원 계정 그대로 둬서 출처가 드러나게 한다.
+      out.push({
+        shortcode: m[3],
+        author: m[1],
+        url: `https://www.instagram.com${href}`,
+      });
     }
     return out;
   }, username);
@@ -142,17 +153,17 @@ async function collect(page, username) {
   const existing = raw ? JSON.parse(raw) : [];
   const known = new Map(existing.map((i) => [i.id, i]));
 
-  const links = (await gridLinks(page, username)).slice(0, PER_ACCOUNT);
+  const links = (await gridLinks(page, username)).slice(0, GRID_MAX);
   if (links.length === 0) {
     log(`  ${username}: 그리드 비어 있음 — 기존 ${existing.length}건 유지`);
     return 0;
   }
 
   let added = 0;
-  for (const { shortcode, url } of links) {
+  for (const { shortcode, url, author } of links) {
     if (known.has(`instagram:${shortcode}`)) continue;
     try {
-      const item = await fetchPost(url, shortcode, username);
+      const item = await fetchPost(url, shortcode, author || username);
       if (item) {
         known.set(item.id, item);
         added++;
@@ -165,7 +176,7 @@ async function collect(page, username) {
 
   const merged = [...known.values()]
     .sort((a, b) => b.publishedAt - a.publishedAt)
-    .slice(0, PER_ACCOUNT);
+    .slice(0, STORE_CAP);
   await kvPut(key, JSON.stringify(merged), TTL_MS);
   log(`  ${username}: 신규 ${added}건, 저장 ${merged.length}건`);
   return merged.length;
