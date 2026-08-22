@@ -140,8 +140,21 @@ export function FeedView() {
         ) : error ? (
           <p className="px-4 py-10 text-center text-[13px] text-accent-ink">{error}</p>
         ) : shown.length === 0 ? (
-          <p className="px-4 py-10 text-center text-[13px] text-faint">
-            올라온 글이 없어요
+          <p className="px-4 py-10 text-center text-[13px] leading-relaxed text-faint">
+            {/* 인스타는 로그아웃 공개 API 가 막히면 통째로 0 이 된다. 그냥
+                "글이 없어요" 라고만 하면 설정이 깨진 걸로 오해하기 쉬워
+                소스 장애임을 구분해서 알려 준다. */}
+            {filter === "instagram" ? (
+              <>
+                인스타 수집이 비어 있어요
+                <br />
+                <span className="text-[12px]">
+                  인스타그램 공개 API 가 응답하지 않는 동안에는 채워지지 않아요
+                </span>
+              </>
+            ) : (
+              "올라온 글이 없어요"
+            )}
           </p>
         ) : (
           <ul className="divide-y divide-line">
