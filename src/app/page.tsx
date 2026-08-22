@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type { ChannelInfo, ClipKind, VideoSummary } from "@/lib/types";
 import { useLiveStream, type StreamSpeed } from "@/lib/useLiveStream";
 import { useComments } from "@/lib/useComments";
@@ -19,7 +20,7 @@ import { preloadFirstPages } from "@/lib/commentsCache";
 // Quick-pick channels shown in the header. The API resolves both @handles and
 // raw channel ids (UC…), so the official channel is keyed by its id.
 const PRESET_CHANNELS = [
-  { label: "아이브 공식", handle: "UC-Fnix71vRP64WXeo0ikd0Q" },
+  { label: "키키 공식", handle: "UCaHwGJXFb28TekZMf7iFg5Q" },
 ] as const;
 const DEFAULT_HANDLE = PRESET_CHANNELS[0].handle;
 const SPEEDS: StreamSpeed[] = ["slow", "normal", "fast"];
@@ -277,11 +278,18 @@ export default function Home() {
             <span className="h-2 w-2 rounded-full bg-accent" />
           </span>
           <span className="text-[18px] font-extrabold tracking-tight text-ink sm:text-[19px]">
-            IVE
+            KiiiKiii
           </span>
           <span className="rounded-full bg-accent-soft px-2.5 py-1 text-[11px] font-bold text-accent">
             {mode === "live" ? "LIVE" : "댓글"}
           </span>
+          {/* Landing page — what this thing is, for first-time visitors. */}
+          <Link
+            href="/about"
+            className="hidden text-[13px] font-semibold text-faint transition-colors hover:text-ink sm:inline"
+          >
+            소개
+          </Link>
         </div>
 
         {/* Channel quick-pick — hidden on mobile to keep the header one line. */}

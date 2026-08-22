@@ -1,9 +1,9 @@
-# IVE LIVE
+# KiiiKiii LIVE
 
 Replay a YouTube channel's video comments as a scrolling **live‑chat** stream —
 like a Twitch/YouTube live chat, but built from the comments people already left.
 
-Defaults to the channel [`@IVEstarship`](https://www.youtube.com/@IVEstarship),
+Defaults to the channel [`@KiiiKiii_starship`](https://www.youtube.com/@KiiiKiii_starship),
 and you can load any other channel from the header.
 
 ## How it works
@@ -16,6 +16,8 @@ and you can load any other channel from the header.
 Controls: **play/pause**, **speed** (slow / normal / fast), comment **order**
 (top vs newest), **loop** (replay forever), and a **theater** mode that hides
 the video list for a clean overlay.
+
+`/about` 는 서비스 소개 랜딩 페이지 — 앱 헤더의 "소개" 링크로 이어진다.
 
 ### Views
 
@@ -55,9 +57,9 @@ per-video (`hall`, `search`, `feed`, `analysis`, `risk`):
 
 ## Deploy (ebs home server · Next standalone)
 
-Live: **https://ive.unflix.tv** — a cloudflared tunnel fronts
-`ebs:127.0.0.1:8490`, where systemd's `app-ive.service` runs
-`/home/ubuntu/apps/ive/server.js` (`output: "standalone"`).
+Live: **https://kiki.unflix.tv** — a cloudflared tunnel fronts
+`ebs:127.0.0.1:8492`, where systemd's `app-kiki.service` runs
+`/home/ubuntu/apps/kiki/server.js` (`output: "standalone"`).
 
 Nothing in `src/` knows it left Workers: `src/instrumentation.ts` injects a
 file-backed KV, a `node:sqlite` D1, and a fire-and-forget `waitUntil` into the
@@ -69,19 +71,19 @@ There is no auto-deploy. Build locally, rsync, restart:
 ```bash
 pnpm build
 rm -rf .next/standalone/.next/static && cp -R .next/static .next/standalone/.next/static
-ssh ebs 'tar czf /tmp/ive-backup-$(date +%F-%H%M%S).tar.gz -C ~/apps ive'
-rsync -a --delete --exclude .env.runtime .next/standalone/ ebs:/home/ubuntu/apps/ive/
-ssh ebs 'sudo systemctl restart app-ive && systemctl is-active app-ive'
-curl -sI https://ive.unflix.tv | head -1
+ssh ebs 'tar czf /tmp/kiki-backup-$(date +%F-%H%M%S).tar.gz -C ~/apps kiki'
+rsync -a --delete --exclude .env.runtime .next/standalone/ ebs:/home/ubuntu/apps/kiki/
+ssh ebs 'sudo systemctl restart app-kiki && systemctl is-active app-kiki'
+curl -sI https://kiki.unflix.tv | head -1
 ```
 
 `--exclude .env.runtime` is load-bearing: that file (server-side only) holds
 `PORT`/`HOSTNAME`, the KV/D1 shim paths, and the API keys — see `.env.example`.
-Rollback = untar the backup over `~/apps/ive` and restart.
+Rollback = untar the backup over `~/apps/kiki` and restart.
 
 The risk collector runs on the same host: `worker-host.mjs` drives
 `workers/cron`'s worker from crontab (collect every 2h, discover 2×/day) against
-`APP_BASE=http://127.0.0.1:8490`, bypassing the tunnel.
+`APP_BASE=http://127.0.0.1:8492`, bypassing the tunnel.
 
 ### Cloudflare Workers (legacy path)
 
