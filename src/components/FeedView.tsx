@@ -9,7 +9,7 @@ type Filter = "all" | FeedSource;
 
 // Instagram sub-filter: 공식 + each member, keyed by account username.
 const IG_ACCOUNTS: { username: string; label: string }[] = [
-  { username: "ivestarship", label: "공식" },
+  { username: "kiiikiii.official", label: "공식" },
   ...MEMBERS.map((m) => ({ username: m.igUsername, label: m.name })),
 ];
 

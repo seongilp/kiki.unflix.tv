@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "ive",
+  "name": "kiki",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-03-25",
   "compatibility_flags": ["nodejs_compat"],
@@ -11,7 +11,7 @@
   },
   "routes": [
     // Custom domain. Resolves once unflix.tv's nameservers point to Cloudflare.
-    { "pattern": "ive.unflix.tv", "custom_domain": true }
+    { "pattern": "kiki.unflix.tv", "custom_domain": true }
   ],
   "observability": {
     "enabled": true
@@ -19,23 +19,25 @@
   "d1_databases": [
     // Risk intelligence time series (snapshots + alerts).
     {
+      // 운영 배포는 ebs standalone 이라 실제로는 D1_SHIM_PATH
+      // (kiki-risk.sqlite)가 쓰인다. 아래는 Workers 경로용 실제 DB.
       "binding": "RISK_DB",
-      "database_name": "ive-risk",
-      "database_id": "03ff90f9-911d-4521-96f2-9dd3d6131a21"
+      "database_name": "kiki-risk",
+      "database_id": "094cc78d-4558-47d0-9092-e5131a2dff75"
     }
   ],
   "kv_namespaces": [
     // App cache: video / Shorts classification per channel.
-    // NOTE: ive-prefixed namespaces — must NOT be shared with the old
-    // `rescene` worker, whose revalidations would clobber `feed:v1`.
+    // 키키 전용 네임스페이스(kiki- 접두사) — 다른 워커의 `feed:v1` 과
+    // 절대 섞이지 않는다. ebs standalone 에서는 KV_SHIM_DIR 이 대신 쓰인다.
     {
       "binding": "SHORTS_CACHE",
-      "id": "b6f3a3fad0a145bca8c1c8d1fe0b604d"
+      "id": "46b78193c37d43759892fe4d880e58aa"
     },
     // OpenNext incremental cache (ISR / Next data cache).
     {
       "binding": "NEXT_INC_CACHE_KV",
-      "id": "572b22c84c84453e8880a4191473226e"
+      "id": "555c02d5958947698a9ac6803d1be242"
     }
   ]
 }

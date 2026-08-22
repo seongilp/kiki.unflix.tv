@@ -4,7 +4,7 @@ import { searchVideos, type ShortsCache } from "@/lib/youtube";
 import { MEMBERS } from "@/lib/analysis/members";
 import { EXT_VIDEOS_KV_KEY } from "../collect/route";
 
-const OFFICIAL_CHANNEL = "UC-Fnix71vRP64WXeo0ikd0Q";
+const OFFICIAL_CHANNEL = "UCaHwGJXFb28TekZMf7iFg5Q";
 const LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000;
 const PER_QUERY = 8;
 const MAX_VIDEOS = 60;
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   const kv = appCache();
   if (!kv) return NextResponse.json({ error: "KV unavailable" }, { status: 503 });
 
-  const queries = ["아이브 IVE", ...MEMBERS.map((m) => `아이브 ${m.name}`)];
+  const queries = ["키키 KiiiKiii", ...MEMBERS.map((m) => `키키 ${m.name}`)];
   const publishedAfterMs = Date.now() - LOOKBACK_MS;
   const ids: string[] = [];
   const perQuery: Record<string, number> = {};

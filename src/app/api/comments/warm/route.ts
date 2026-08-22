@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { listComments, YoutubeError, type ShortsCache } from "@/lib/youtube";
 
-// IVE 공식 채널 — matches the UI's default preset.
-const DEFAULT_CHANNEL = "UC-Fnix71vRP64WXeo0ikd0Q";
+// 키키(KiiiKiii) 공식 채널 — matches the UI's default preset.
+const DEFAULT_CHANNEL = "UCaHwGJXFb28TekZMf7iFg5Q";
 // Videos per call, capped low to stay well under the Workers subrequest
 // budget (each video ≈ 1 KV read + 1 YouTube fetch + 1 KV write).
 const DEFAULT_BATCH = 12;

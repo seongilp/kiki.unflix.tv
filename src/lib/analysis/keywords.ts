@@ -21,8 +21,8 @@ const STOPWORDS = new Set([
   "after", "before", "their", "these", "those", "every", "always",
 ]);
 
-// Trailing josa stripped (repeatedly) from 3+ char tokens, so "유진이가" and
-// "원영이" both normalize to the bare name.
+// Trailing josa stripped (repeatedly) from 3+ char tokens, so "수이는" and
+// "하음이가" both normalize to the bare name.
 const TRAILING_JOSA = new Set([..."이가은는을를의도만에야요아"]);
 
 export interface Keyword {

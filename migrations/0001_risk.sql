@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS snapshots (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   ts INTEGER NOT NULL,              -- epoch ms of the collect run
-  member TEXT NOT NULL,             -- 'all' or member key (yujin, gaeul, …)
+  member TEXT NOT NULL,             -- 'all' or member key (jiyu, leesol, …)
   source TEXT NOT NULL,             -- 'all' | youtube | yt_ext | news | dc | instagram
   mentions INTEGER NOT NULL,
   positive INTEGER NOT NULL,

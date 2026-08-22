@@ -6,7 +6,7 @@ const html = `
   <li>
     <div class="thumb"><a href="/talk/375519014"><img src="x.jpg" /></a></div>
     <div class="tit">
-      <h2><a href="/talk/375519014" class="subject">장원영 공항 <b>논란</b> 정리</a></h2>
+      <h2><a href="/talk/375519014" class="subject">지유 공항 <b>논란</b> 정리</a></h2>
       <span class="reple-num">(83)</span>
     </div>
     <div class="txt"><a href="/talk/375519014">본문 <b>미리보기</b> &amp; 텍스트</a></div>
@@ -28,7 +28,7 @@ describe("normalizePann", () => {
     const [it] = items;
     expect(it.id).toBe("pann:375519014");
     expect(it.source).toBe("pann");
-    expect(it.title).toBe("장원영 공항 논란 정리");
+    expect(it.title).toBe("지유 공항 논란 정리");
     expect(it.snippet).toBe("본문 미리보기 & 텍스트");
     expect(it.url).toBe("https://pann.nate.com/talk/375519014");
     expect(it.author).toBe("엔터톡"); // board category, not the nickname

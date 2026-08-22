@@ -3,7 +3,7 @@ import { stripHtml, truncate } from "./html";
 
 describe("stripHtml", () => {
   it("removes tags and decodes common entities", () => {
-    expect(stripHtml("<b>아이브</b> &amp; &quot;원영&quot;")).toBe('아이브 & "원영"');
+    expect(stripHtml("<b>키키</b> &amp; &quot;지유&quot;")).toBe('키키 & "지유"');
   });
   it("collapses to trimmed text", () => {
     expect(stripHtml("  <p>hi</p>  ")).toBe("hi");
@@ -12,7 +12,7 @@ describe("stripHtml", () => {
     expect(stripHtml("&amp;quot;")).toBe("&quot;");
   });
   it("decodes hex apostrophe entities (Nate Pann)", () => {
-    expect(stripHtml("아이브 &#x27;ATTITUDE&#x27; 어때")).toBe("아이브 'ATTITUDE' 어때");
+    expect(stripHtml("키키 &#x27;I DO ME&#x27; 어때")).toBe("키키 'I DO ME' 어때");
     expect(stripHtml("&#39;a&#x27;b&#39;")).toBe("'a'b'");
   });
 });

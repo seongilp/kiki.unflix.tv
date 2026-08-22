@@ -55,14 +55,14 @@ describe("evaluateAlerts", () => {
   it("fires sentiment_shift only vs the bucket's own baseline", () => {
     // 30% negative vs 10% baseline → +20pp shift
     const shifted = evaluateAlerts(
-      "wonyoung", "youtube",
+      "jiyu", "youtube",
       stat({ positive: 50, neutral: 20, negative: 30 }),
       base(),
     );
     expect(shifted.find((a) => a.kind === "sentiment_shift")?.severity).toBe("warning");
     // Same 30% negative but the bucket is ALWAYS 30% negative → silent
     const normal = evaluateAlerts(
-      "wonyoung", "news",
+      "jiyu", "news",
       stat({ positive: 50, neutral: 20, negative: 30 }),
       base({ avgNegShare: 0.3 }),
     );
@@ -93,14 +93,14 @@ describe("evaluateAlerts", () => {
 describe("aggregate", () => {
   it("weights negativity by likes and buckets per member×source", () => {
     const agg = newAgg(1);
-    accumulate(agg, { text: "유진이 별로다 실망", likeCount: 99, origin: "youtube" });
-    accumulate(agg, { text: "유진이 최고 예쁘다", likeCount: 0, origin: "youtube" });
+    accumulate(agg, { text: "수이는 별로다 실망", likeCount: 99, origin: "youtube" });
+    accumulate(agg, { text: "수이는 최고 예쁘다", likeCount: 0, origin: "youtube" });
     const rows = finalizeRows(agg);
-    const yujin = rows.find((r) => r.member === "yujin" && r.source === "youtube")!;
-    expect(yujin.mentions).toBe(2);
-    expect(yujin.negative).toBe(1);
+    const sui = rows.find((r) => r.member === "sui" && r.source === "youtube")!;
+    expect(sui.mentions).toBe(2);
+    expect(sui.negative).toBe(1);
     // raw share 50%, but the negative one carries ~3x weight
-    expect(yujin.negWeighted).toBeGreaterThan(0.6);
+    expect(sui.negWeighted).toBeGreaterThan(0.6);
     expect(rows.find((r) => r.member === "all" && r.source === "all")!.mentions).toBe(2);
   });
 

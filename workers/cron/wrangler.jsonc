@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "ive-risk-cron",
+  "name": "kiki-risk-cron",
   "main": "index.ts",
   "compatibility_date": "2025-03-25",
   "workers_dev": false,
@@ -9,9 +9,9 @@
     "crons": ["7 */2 * * *", "23 3,15 * * *"]
   },
   "vars": {
-    // Public origin. ive.zihado.workers.dev is dead — the app now runs as a Node
-    // standalone on the ebs home server behind a cloudflared tunnel.
-    "APP_BASE": "https://ive.unflix.tv"
+    // Public origin. 앱은 ebs 홈서버의 Node standalone 으로 돌고
+    // cloudflared 터널이 앞단에 붙는다.
+    "APP_BASE": "https://kiki.unflix.tv"
   }
   // OPS_KEY is a secret: `wrangler secret put OPS_KEY -c workers/cron/wrangler.jsonc`
   //

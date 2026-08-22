@@ -2,17 +2,15 @@ import type { FeedSource } from "./types";
 
 // Keyword set driving the broad sources (네이버뉴스). DC is already
 // group-specific. Korean + romanized terms maximize search breadth.
-// Distinctive member names stand alone; common-word names (가을/레이/리즈/이서)
-// are qualified with "아이브" to avoid unrelated results.
+// "키키" 단독 검색은 의성어라 노이즈가 심하므로 항상 그룹/멤버 조합으로 묶는다.
 export const KEYWORDS = [
-  "아이브",
-  "IVE",
-  "안유진",
-  "장원영",
-  "아이브 가을",
-  "아이브 레이",
-  "아이브 리즈",
-  "아이브 이서",
+  "KiiiKiii",
+  "걸그룹 키키",
+  "키키 지유",
+  "키키 이솔",
+  "키키 수이",
+  "키키 하음",
+  "키키 키야",
 ];
 
 // Sources wired AND enabled. 스레드/더쿠/인스티즈 are deferred.
@@ -28,30 +26,29 @@ export const NAVER_PER_KEYWORD = 30;
 export const PANN_PER_KEYWORD = 15;
 // Daum web search (Kakao Search API) results per keyword.
 export const DAUM_PER_KEYWORD = 25;
-// Per-account cap — 7 accounts, so keep each slice small and polite.
+// Per-account cap — 6 accounts, so keep each slice small and polite.
 export const IG_MEDIA_LIMIT = 12;
-// IVE official + member accounts (all verified), read via the logged-out
+// KiiiKiii official + member accounts, read via the logged-out
 // web_profile_info API. Instagram rate-limits bursts, so each feed refresh
 // fetches ONE account (round-robin) and accumulates results in KV — see
-// sources/instagram.ts.
+// sources/instagram.ts. 존재하지 않는 계정은 조용히 건너뛴다.
 export const IG_USERNAMES = [
-  "ivestarship", // 공식
-  "_yujin_an", // 안유진
-  "fallingin__fall", // 가을
-  "reinyourheart", // 레이
-  "for_everyoung10", // 장원영
-  "liz.yeyo", // 리즈
-  "eeseooes", // 이서
+  "kiiikiii.official", // 공식
+  "kiiikiii__jiyu", // 지유
+  "kiiikiii__leesol", // 이솔
+  "kiiikiii__sui", // 수이
+  "kiiikiii__haum", // 하음
+  "kiiikiii__kya", // 키야
 ];
 // KV key prefix for the Instagram rotation state (reuses SHORTS_CACHE).
 // `<prefix>:cursor` + one `<prefix>:u:<username>` key per account — per-key
 // storage survives KV eventual consistency; a single blob does not.
 export const IG_STATE_KV_KEY = "feed:ig:v2";
 
-// DC 1,2,3 아이브 마이너 갤러리 (verified: gall.dcinside.com/mgallery/board/lists/?id=123ive).
+// 키키 마이너 갤러리 (verified: gall.dcinside.com/mgallery/board/lists/?id=kiiikiii).
 // "mgallery" = minor gallery (board path /mgallery/board/...),
 // "board" = regular gallery (/board/...).
-export const DC_GALLERY_ID = "123ive";
+export const DC_GALLERY_ID = "kiiikiii";
 export const DC_GALLERY_TYPE: "mgallery" | "board" = "mgallery";
 export const DC_LIST_COUNT = 50;
 

@@ -7,9 +7,9 @@ import {
   type ShortsCache,
 } from "@/lib/youtube";
 
-// IVE 공식 채널 id — the UI always sends an explicit handle; this is the
+// 키키(KiiiKiii) 공식 채널 id — the UI always sends an explicit handle; this is the
 // fallback for bare /api/channel calls.
-const DEFAULT_HANDLE = "UC-Fnix71vRP64WXeo0ikd0Q";
+const DEFAULT_HANDLE = "UCaHwGJXFb28TekZMf7iFg5Q";
 
 // Considered fresh for 60 min; the KV entry lives a day so a stale copy can be
 // served instantly while it revalidates in the background (stale-while-revalidate).

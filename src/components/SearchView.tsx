@@ -50,7 +50,7 @@ export function SearchView({
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="댓글 검색 (예: 원영, 유진, 직캠…)"
+          placeholder="댓글 검색 (예: 지유, 수이, 직캠…)"
           className="w-full rounded-full border border-line bg-[var(--surface-2)] px-4 py-2.5 text-[14px] text-ink outline-none transition-colors placeholder:text-faint focus:border-accent focus:bg-white"
         />
         <div className="flex items-center gap-2">

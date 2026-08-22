@@ -156,7 +156,7 @@ export async function GET(request: Request) {
       await fetch(webhook, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: `IVE 리스크 알림\n${lines.join("\n")}` }),
+        body: JSON.stringify({ content: `키키 리스크 알림\n${lines.join("\n")}` }),
       });
     } catch { /* alerting must never fail the snapshot */ }
   }

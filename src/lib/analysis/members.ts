@@ -1,4 +1,4 @@
-// IVE member roster + alias matching for comment mention detection.
+// KiiiKiii member roster + alias matching for comment mention detection.
 
 export interface Member {
   key: string;
@@ -8,12 +8,11 @@ export interface Member {
 }
 
 export const MEMBERS: Member[] = [
-  { key: "yujin", name: "안유진", aliases: ["안유진", "유진", "yujin"], igUsername: "_yujin_an" },
-  { key: "gaeul", name: "가을", aliases: ["가을", "gaeul"], igUsername: "fallingin__fall" },
-  { key: "rei", name: "레이", aliases: ["레이", "rei"], igUsername: "reinyourheart" },
-  { key: "wonyoung", name: "장원영", aliases: ["장원영", "원영", "wonyoung"], igUsername: "for_everyoung10" },
-  { key: "liz", name: "리즈", aliases: ["리즈", "liz"], igUsername: "liz.yeyo" },
-  { key: "leeseo", name: "이서", aliases: ["이서", "leeseo"], igUsername: "eeseooes" },
+  { key: "jiyu", name: "지유", aliases: ["지유", "jiyu"], igUsername: "kiiikiii__jiyu" },
+  { key: "leesol", name: "이솔", aliases: ["이솔", "leesol", "isol"], igUsername: "kiiikiii__leesol" },
+  { key: "sui", name: "수이", aliases: ["수이", "sui"], igUsername: "kiiikiii__sui" },
+  { key: "haum", name: "하음", aliases: ["하음", "haum"], igUsername: "kiiikiii__haum" },
+  { key: "kya", name: "키야", aliases: ["키야", "kya"], igUsername: "kiiikiii__kya" },
 ];
 
 // Member key for a personal Instagram username (undefined for 공식/unknown).
@@ -21,9 +20,9 @@ export function memberKeyForIgUsername(username: string): string | undefined {
   return MEMBERS.find((m) => m.igUsername === username)?.key;
 }
 
-// Josa/suffix characters allowed right after an alias ("유진이", "레이가",
-// "원영님"). Any other Hangul/alnum continuation means it's a different word
-// ("레이싱", "플레이" — rejected by the preceding-char rule).
+// Josa/suffix characters allowed right after an alias ("수이는", "하음이가",
+// "지유님"). Any other Hangul/alnum continuation means it's a different word
+// ("아이솔레이션", "가수이다" — rejected by the preceding-char rule).
 const TRAILING_PARTICLES = new Set([
   ..."이가은는을를의도만아야랑에께님씨와과요",
 ]);

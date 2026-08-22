@@ -39,37 +39,36 @@ interface Summary {
 
 const EN_NAMES: Record<string, string> = {
   all: "GROUP",
-  yujin: "AN YUJIN",
-  gaeul: "GAEUL",
-  rei: "REI",
-  wonyoung: "JANG WONYOUNG",
-  liz: "LIZ",
-  leeseo: "LEESEO",
+  jiyu: "JIYU",
+  leesol: "LEESOL",
+  sui: "SUI",
+  haum: "HAUM",
+  kya: "KYA",
 };
 const KR_NAMES: Record<string, string> = {
-  all: "아이브 전체",
+  all: "키키 전체",
   ...Object.fromEntries(MEMBERS.map((m) => [m.key, m.name])),
 };
-// Static avatars snapshotted from each account's Instagram profile photo
-// (IG's signed CDN urls expire, so we self-host under /members). Members whose
-// IG profile photo is currently blank fall back to an initial badge — list
-// them here so we don't ship an empty tile.
-const NO_PHOTO = new Set(["rei"]); // 레이: 현재 인스타 프로필 사진 비공개/공란
+// Static avatars self-hosted under /members (IG's signed CDN urls expire).
+// 확보한 멤버 사진만 표시하고, 나머지는 이니셜 배지로 폴백한다.
+// public/members/<key>.jpg 를 추가한 뒤 아래 HAS_PHOTO 에 키를 넣으면 사진이 뜬다.
+// (사진 출처: 멤버 개인 인스타그램 프로필 이미지 — IG 프로필 API 가
+//  레이트리밋을 걸면 수집이 실패하니 시간을 두고 다시 받으면 된다.)
+const HAS_PHOTO = new Set<string>(["leesol"]);
 const AVATARS: Record<string, string | null> = {
   all: "/members/all.jpg",
   ...Object.fromEntries(
-    MEMBERS.map((m) => [m.key, NO_PHOTO.has(m.key) ? null : `/members/${m.key}.jpg`]),
+    MEMBERS.map((m) => [m.key, HAS_PHOTO.has(m.key) ? `/members/${m.key}.jpg` : null]),
   ),
 };
 // Gradient tint per member for the initial-badge fallback.
 const AVATAR_TINT: Record<string, [string, string]> = {
   all: ["#22d3ee", "#0e7490"],
-  yujin: ["#f0abfc", "#a21caf"],
-  gaeul: ["#fdba74", "#c2410c"],
-  rei: ["#7dd3fc", "#2563eb"],
-  wonyoung: ["#fda4af", "#be123c"],
-  liz: ["#a5b4fc", "#4338ca"],
-  leeseo: ["#6ee7b7", "#047857"],
+  jiyu: ["#f0abfc", "#a21caf"],
+  leesol: ["#fdba74", "#c2410c"],
+  sui: ["#7dd3fc", "#2563eb"],
+  haum: ["#fda4af", "#be123c"],
+  kya: ["#6ee7b7", "#047857"],
 };
 
 function Avatar({ member, ring }: { member: string; ring: string }) {
@@ -1396,14 +1395,14 @@ export function RiskView() {
             <span className="risk-live-dot h-2 w-2 rounded-full bg-[var(--r-cyan)]" />
             <span className="risk-label" style={{ color: "var(--r-cyan)" }}>Live Threat Monitor</span>
           </span>
-          <span className="text-[18px] font-extrabold tracking-tight">IVE 리스크 관제</span>
+          <span className="text-[18px] font-extrabold tracking-tight">키키 리스크 관제</span>
           <span className="risk-mono ml-auto text-[11px]" style={{ color: "var(--r-faint)" }}>
             LAST SWEEP {fmtTime(d.latestTs)} KST · RUNS {snapshotRuns}
             {snapshotRuns < 6 ? " · 베이스라인 수집 중" : ""}
           </span>
         </div>
 
-        {/* ── Row 1: 아이브 카드 + Executive Summary ── */}
+        {/* ── Row 1: 키키 카드 + Executive Summary ── */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
           <MemberTile
             member="all"

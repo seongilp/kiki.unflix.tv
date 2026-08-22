@@ -3,7 +3,7 @@
 // this worker only drives them on a schedule.
 
 interface Env {
-  APP_BASE: string; // e.g. https://ive.unflix.tv
+  APP_BASE: string; // e.g. https://kiki.unflix.tv
   OPS_KEY: string; // same value as the app's FEED_WARM_KEY secret
 }
 
